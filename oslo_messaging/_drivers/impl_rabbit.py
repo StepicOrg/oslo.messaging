@@ -116,6 +116,9 @@ rabbit_opts = [
                deprecated_group='DEFAULT',
                help='Maximum number of RabbitMQ connection retries. '
                     'Default is 0 (infinite retry count).'),
+    cfg.IntOpt('rabbit_prefetch_count',
+               default=0,
+               help='The number of prefetched messages held by receiver.'),
     cfg.BoolOpt('rabbit_ha_queues',
                 default=False,
                 deprecated_group='DEFAULT',
@@ -879,6 +882,12 @@ class Connection(object):
         """
         if self.channel is not None and new_channel != self.channel:
             self.connection.maybe_close_channel(self.channel)
+        if new_channel and new_channel != self.channel:
+            new_channel.basic_qos(
+                prefetch_size=0,
+                prefetch_count=self.driver_conf.rabbit_prefetch_count,
+                a_global=False
+            )
         self.channel = new_channel
 
     def close(self):
