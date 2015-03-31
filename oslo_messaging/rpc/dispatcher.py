@@ -30,6 +30,7 @@ import sys
 
 import six
 
+from oslo_config import cfg
 from oslo_messaging._i18n import _
 from oslo_messaging import _utils as utils
 from oslo_messaging import localcontext
@@ -38,6 +39,15 @@ from oslo_messaging import server as msg_server
 from oslo_messaging import target as msg_target
 
 LOG = logging.getLogger(__name__)
+
+_dispatcher_opts = [
+    cfg.BoolOpt('rpc_acks_late',
+                default=False,
+                help='Late ack means the rpc messages will be acknowledged '
+                     'after the procedure has been executed.'),
+]
+
+cfg.CONF.register_opts(_dispatcher_opts)
 
 
 class ExpectedException(Exception):
@@ -132,8 +142,11 @@ class RPCDispatcher(object):
 
     @contextlib.contextmanager
     def __call__(self, incoming, executor_callback=None):
-        incoming.acknowledge()
+        if not incoming.conf.rpc_acks_late:
+            incoming.acknowledge()
         yield lambda: self._dispatch_and_reply(incoming, executor_callback)
+        if incoming.conf.rpc_acks_late:
+            incoming.acknowledge()
 
     def _dispatch_and_reply(self, incoming, executor_callback):
         try:

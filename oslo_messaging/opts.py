@@ -31,6 +31,7 @@ from oslo_messaging._drivers.protocols.amqp import opts as amqp_opts
 from oslo_messaging._executors import base
 from oslo_messaging.notify import notifier
 from oslo_messaging.rpc import client
+from oslo_messaging.rpc import dispatcher
 from oslo_messaging import transport
 
 _global_opt_lists = [
@@ -39,6 +40,7 @@ _global_opt_lists = [
     base._pool_opts,
     notifier._notifier_opts,
     client._client_opts,
+    dispatcher._dispatcher_opts,
     transport._transport_opts,
 ]
 
