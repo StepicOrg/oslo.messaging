@@ -29,6 +29,7 @@ from oslo_messaging._drivers.zmq_driver.matchmaker import matchmaker_redis
 from oslo_messaging._executors import impl_pooledexecutor
 from oslo_messaging.notify import notifier
 from oslo_messaging.rpc import client
+from oslo_messaging.rpc import dispatcher
 from oslo_messaging import transport
 
 _global_opt_lists = [
@@ -36,6 +37,7 @@ _global_opt_lists = [
     impl_zmq.zmq_opts,
     impl_pooledexecutor._pool_opts,
     client._client_opts,
+    dispatcher._dispatcher_opts,
     transport._transport_opts,
 ]
 

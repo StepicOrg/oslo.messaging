@@ -29,6 +29,7 @@ import sys
 
 import six
 
+from oslo_config import cfg
 from oslo_messaging._i18n import _LE
 from oslo_messaging import _utils as utils
 from oslo_messaging import dispatcher
@@ -38,6 +39,15 @@ from oslo_messaging import server as msg_server
 from oslo_messaging import target as msg_target
 
 LOG = logging.getLogger(__name__)
+
+_dispatcher_opts = [
+    cfg.BoolOpt('rpc_acks_late',
+                default=False,
+                help='Late ack means the rpc messages will be acknowledged '
+                     'after the procedure has been executed.'),
+]
+
+cfg.CONF.register_opts(_dispatcher_opts)
 
 
 class ExpectedException(Exception):
@@ -131,10 +141,18 @@ class RPCDispatcher(dispatcher.DispatcherBase):
         return self.serializer.serialize_entity(ctxt, result)
 
     def __call__(self, incoming, executor_callback=None):
-        incoming[0].acknowledge()
+        def acknowledge(incoming, result):
+            incoming.acknowledge()
+
+        if incoming[0].listener.driver.conf.rpc_acks_late:
+            post = acknowledge
+        else:
+            incoming[0].acknowledge()
+            post = None
         return dispatcher.DispatcherExecutorContext(
             incoming[0], self._dispatch_and_reply,
-            executor_callback=executor_callback)
+            executor_callback=executor_callback,
+            post=post)
 
     def _dispatch_and_reply(self, incoming, executor_callback):
         try:
