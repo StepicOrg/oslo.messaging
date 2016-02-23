@@ -144,7 +144,7 @@ class RPCDispatcher(dispatcher.DispatcherBase):
         def acknowledge(incoming, result):
             incoming.acknowledge()
 
-        if incoming[0].listener.driver.conf.rpc_acks_late:
+        if cfg.CONF.rpc_acks_late:
             post = acknowledge
         else:
             incoming[0].acknowledge()
