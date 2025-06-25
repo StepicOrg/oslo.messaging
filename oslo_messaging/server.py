@@ -49,7 +49,7 @@ DEFAULT_LOG_AFTER = 30
 
 _pool_opts = [
     cfg.IntOpt('executor_thread_pool_size',
-               default=64,
+               default=1,
                deprecated_name="rpc_thread_pool_size",
                help='Size of executor thread pool when'
                ' executor is threading or eventlet.'),

@@ -164,7 +164,7 @@ rabbit_opts = [
                     'duration of the TTL are automatically deleted. The '
                     'parameter affects only reply and fanout queues.'),
     cfg.IntOpt('rabbit_qos_prefetch_count',
-               default=0,
+               default=1,
                help='Specifies the number of messages to prefetch. Setting to '
                     'zero allows unlimited messages.'),
     cfg.IntOpt('heartbeat_timeout_threshold',
