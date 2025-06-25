@@ -36,6 +36,10 @@ _dispatcher_opts = [
                 default=False,
                 help='Add an endpoint to answer to ping calls. '
                      'Endpoint is named oslo_rpc_server_ping'),
+    cfg.BoolOpt('rpc_acks_late',
+                default=True,
+                help='Late ack means the rpc messages will be acknowledged '
+                     'after the procedure has been executed.'),
 ]
 
 __all__ = [
