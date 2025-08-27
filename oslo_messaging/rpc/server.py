@@ -180,13 +180,6 @@ class RPCServer(msg_server.MessageHandlingServer):
             failure = sys.exc_info()
             LOG.exception('Exception during message handling')
 
-        if self.conf.rpc_acks_late:
-            try:
-                message.acknowledge()
-            except Exception:
-                LOG.exception("Can not acknowledge message. Skip processing")
-                return
-
         try:
             if failure is None:
                 message.reply(res)

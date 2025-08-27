@@ -303,6 +303,7 @@ class Consumer(object):
             durable=self.durable,
             auto_delete=self.exchange_auto_delete)
         self.enable_cancel_on_failover = enable_cancel_on_failover
+        self.conf = cfg.CONF
 
     def declare(self, conn):
         """Re-declare the queue after a rabbit (re)connect."""
@@ -416,6 +417,12 @@ class Consumer(object):
         except Exception:
             LOG.exception("Failed to process message ... skipping it.")
             message.reject()
+
+        if self.conf.rpc_acks_late:
+            try:
+                message.acknowledge()
+            except Exception:
+                LOG.exception("Can not acknowledge message. Skip processing.")
 
 
 class DummyConnectionLock(_utils.DummyLock):
