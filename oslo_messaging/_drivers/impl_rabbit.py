@@ -84,7 +84,7 @@ rabbit_opts = [
                 'executable used does not support OpenSSL FIPS mode, '
                 'an exception will be raised.'),
     cfg.BoolOpt('heartbeat_in_pthread',
-                default=True,
+                default=False,
                 help="Run the health check heartbeat thread "
                      "through a native python thread by default. If this "
                      "option is equal to False then the health check "
