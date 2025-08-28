@@ -168,7 +168,7 @@ rabbit_opts = [
                     'queues or you deployment will create an infinite number '
                     'of queue over time.'),
     cfg.IntOpt('rabbit_qos_prefetch_count',
-               default=0,
+               default=1,
                help='Specifies the number of messages to prefetch. Setting to '
                     'zero allows unlimited messages.'),
     cfg.IntOpt('heartbeat_timeout_threshold',
