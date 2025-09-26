@@ -154,12 +154,7 @@ class RPCServer(msg_server.MessageHandlingServer):
 
         # TODO(sileht): We should remove that at some point and do
         # this directly in the driver
-        if not self.conf.rpc_acks_late:
-            try:
-                message.acknowledge()
-            except Exception:
-                LOG.exception("Can not acknowledge message. Skip processing")
-                return
+        message.acknowledge()
 
         failure = None
         try:
