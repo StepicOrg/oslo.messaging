@@ -152,10 +152,6 @@ class RPCServer(msg_server.MessageHandlingServer):
     def _process_incoming(self, incoming):
         message = incoming[0]
 
-        # TODO(sileht): We should remove that at some point and do
-        # this directly in the driver
-        message.acknowledge()
-
         failure = None
         try:
             res = self.dispatcher.dispatch(message)
@@ -193,6 +189,8 @@ class RPCServer(msg_server.MessageHandlingServer):
             # between the current stack frame and the traceback in
             # exc_info.
             del failure
+
+        message.acknowledge()
 
 
 def get_rpc_server(transport, target, endpoints,
